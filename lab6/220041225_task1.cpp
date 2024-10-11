@@ -9,24 +9,24 @@ class Car{
     double fuelLevel;
     
     public:
+        
+    Car():fuelLevel(0.0){} 
     Car(string a,string b,double c,double d):make(a),model(b),fuelCapacity(c),fuelLevel(d){}
     
-    Car():fuelLevel(0.0){} 
-    
-    Car operator + ()const{
-        double d=fuelLevel+1;
+    Car operator + (double a)const{
+        double d=fuelLevel+a;
         if(d>fuelCapacity){
             cout<<"Limit exceeded\n";
            d=fuelLevel;
         }
-        return Car(make,model,fuelCapacity,d);
+        return *this;
     }
     
-       Car operator - ()const{
-        double d=fuelLevel-1;
+       Car operator - (double a)const{
+        double d=fuelLevel-a;
         if(d<0){
             cout<<"cannot decrement\n";
-            d=0;
+            d=fuelLevel;
         }
         return Car(make,model,fuelCapacity,d);
     }
@@ -37,7 +37,7 @@ class Car{
             cout<<"Limit exceeded\n";
            d=fuelLevel;
         }
-        return Car(make,model,fuelCapacity,d);
+        return *this;
     }
     
     bool operator ==(Car car1)const{
@@ -51,22 +51,64 @@ class Car{
         return fuelLevel>car1.fuelLevel;
     }
     
-   // friend void operator<< (Car);
-    //friend void operator >>(Car);
+  
+    friend ostream& operator<<(ostream& os, const Car& car) {
+    os << "Make: " << car.make << "\n"
+       << "Model: " << car.model << "\n"
+       << "Fuel Capacity: " << car.fuelCapacity << " liters\n"
+       << "Fuel Level: " << car.fuelLevel << " liters\n";
+    return os;
+}
+
+friend istream& operator>>(istream& is, Car& car) {
+    cout << "Enter make: ";
+    is >> car.make;
+    cout << "Enter model: ";
+    is >> car.model;
+    cout << "Enter fuel capacity: ";
+    is >> car.fuelCapacity;
+    cout << "Enter fuel level: ";
+    is >> car.fuelLevel;
+    return is;
+}
+
     
 };
-//   void operator <<(){
-//         cout<<make<<"\n";
-//         cout<<model<<"\n";
-//         cout<<fuelCapacity<<"\n";
-//         cout<<fuelLevel<<"\n";
-//     }
-//     void operator >>(Car c1)const{
-          
-//     }
+
     
 int main(){
-    Car c1;
-    c1("dfd","dfe",34.2,1.0);
+  Car c1("Toyota", "Corolla", 50.0, 10.0);
+    Car c2("Honda", "Civic", 55.0, 20.0);
+
+    cout << "Initial Cars:\n";
+    cout << c1;
+    cout << c2;
+
+    c1 += 30.0; 
+    cout << "\nAfter adding fuel to c1:\n";
+    cout << c1;
+
+    c1 - 15.0; 
+    cout << "\nAfter consuming fuel from c1:\n";
+    cout << c1;
+
+    if (c1 == c2) {
+        cout << "Cars are identical.\n";
+    } else {
+        cout << "Cars are not identical.\n";
+    }
+
+    if (c1 < c2) {
+        cout << "c1 has less fuel than c2.\n";
+    } else {
+        cout << "c1 has more fuel than c2.\n";
+    }
+
+   
+    Car c3;
+    cin >> c3; 
+    cout << "\nNew Car Details:\n";
+    cout << c3; 
+
     return 0;
 }
